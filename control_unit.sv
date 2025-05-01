@@ -19,6 +19,10 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
+
+`include "defines.svh"
+
+
 module control(
     input  logic [6:0]  opcode,   
     input  logic        alu_ctrl_isTrue_i ,
@@ -40,7 +44,7 @@ always_comb begin
             Branch    = 1'b0;  //brch
             MemToReg  = 1'b0;  //mem
             MemWrite  = 1'b0;
-            ALUOP     = 2'b10; //alu
+            ALUOP     = `ALUOP_FUNC; //alu
             ALUSrc    = 1'b0;  //使用regB
             RegWrite  = 1'b1;  //reg
         end
@@ -52,17 +56,17 @@ always_comb begin
             Branch    = 1'b0;  //brch
             MemToReg  = 1'b0;  //mem
             MemWrite  = 1'b0;
-            ALUOP     = 2'b10; //操作类型由funct3决定
+            ALUOP     = `ALUOP_FUNC; //操作类型由funct3决定
             ALUSrc    = 1'b1;  //使用立即数
             RegWrite  = 1'b1;  //reg
         end
         
-        // Load指令（LW/lh/lb/..）  <5条>
+        // I-type Load指令（LW/lh/lb/..）  <5条>
         7'b0000011: begin
             Branch    = 1'b0;  //brch
             MemToReg  = 1'b1;  //mem
             MemWrite  = 1'b0;
-            ALUOP     = 2'b00; //操作类型由funct3决定
+            ALUOP     = `ALUOP_ADD; //操作类型由funct3决定
             ALUSrc    = 1'b1;  //基地址+偏移量
             RegWrite  = 1'b1;  //reg
         end
@@ -72,7 +76,7 @@ always_comb begin
             Branch    = 1'b0;  //brch
             MemToReg  = 1'b0;  //实际是X
             MemWrite  = 1'b1;  //写内存
-            ALUOP     = 2'b00; 
+            ALUOP     = `ALUOP_ADD; 
             ALUSrc    = 1'b1;  //使用imm
             RegWrite  = 1'b0;  //reg
         end
@@ -83,7 +87,7 @@ always_comb begin
             Branch    = 1'b1;  //brch taken
             MemToReg  = 1'b0;  //实际是X
             MemWrite  = 1'b0;  
-            ALUOP     = 2'b01; //比较
+            ALUOP     = `ALUOP_SUB; //比较
             ALUSrc    = 1'b0;  
             RegWrite  = 1'b0;  
 
@@ -122,7 +126,7 @@ always_comb begin
             Branch    = 1'b0;  //brch
             MemToReg  = 1'b0;  //mem
             MemWrite  = 1'b0;
-            ALUOP     = 2'b00; //alu
+            ALUOP     = `ALUOP_ADD; //alu
             ALUSrc    = 1'b0;
             RegWrite  = 1'b0;  //reg
         end
